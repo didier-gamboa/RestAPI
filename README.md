@@ -1,11 +1,11 @@
 # RestAPI - Proyecto Integrador
 
-Project de REST API para gestionar clientes, productos y ventas usando Python, PostgreSQL y Flask.
+Proyecto de REST API para gestionar clientes, productos y ventas usando Python, FastAPI y MySQL.
 
 ## Requisitos previos
 
 - Python 3.8+
-- PostgreSQL instalado y en funcionamiento
+- MySQL Server instalado y en funcionamiento (puedes usar MySQL Workbench como interfaz gráfica)
 - pip (gestor de paquetes de Python)
 
 ## Pasos de instalación
@@ -43,29 +43,29 @@ Copia el archivo `.env.example` a `.env`:
 cp .env.example .env
 ```
 
-Luego edita el archivo `.env` con tus credenciales de PostgreSQL:
+Luego edita el archivo `.env` con tus credenciales de MySQL:
 
 ```dotenv
-DB_HOST=localhost          # Host de tu base de datos
-DB_PORT=5432              # Puerto (por defecto 5432)
+DB_HOST=localhost          # Host de tu base de datos (generalmente localhost)
+DB_PORT=3306              # Puerto (por defecto 3306 para MySQL)
 DB_NAME=store_db          # Nombre de la base de datos
-DB_USER=postgres          # Usuario de PostgreSQL
-DB_PASSWORD=tu_contraseña # Tu contraseña de PostgreSQL
+DB_USER=root              # Usuario de MySQL (por defecto root)
+DB_PASSWORD=tu_contraseña # Tu contraseña de MySQL
 ```
 
 **Importante:** Asegúrate de que:
-- PostgreSQL está corriendo
-- La base de datos `store_db` existe (o crea una nueva)
-- Las credenciales sean correctas
+- MySQL está corriendo (verifica en MySQL Workbench que el servidor local esté activo)
+- La base de datos `store_db` existe o será creada automáticamente por el seed script
+- Las credenciales sean correctas (usuario y contraseña que configuraste en MySQL)
 
-### 5. Ejecutar el seed (populated la base de datos)
+### 5. Ejecutar el seed (pobla la base de datos)
 
 ```bash
 # Primera ejecución (crea tablas e inserta datos)
-python scripts/seed_db_postgres.py
+python scripts/seed_db_mysql.py
 
 # Para reiniciar y recrear las tablas:
-python scripts/seed_db_postgres.py --reset
+python scripts/seed_db_mysql.py --reset
 ```
 
 Esto creará 3 tablas:
@@ -78,7 +78,8 @@ Esto creará 3 tablas:
 ```
 RestAPI/
 ├── scripts/
-│   └── seed_db_postgres.py    # Script para poblar la base de datos
+│   ├── seed_db_mysql.py       # Script para poblar la base de datos MySQL
+│   └── seed_db_postgres.py    # Script para poblar la base de datos PostgreSQL (legado)
 ├── .env.example               # Plantilla de variables de entorno
 ├── .env                       # Variables de entorno (no commitear a Git)
 ├── .venv/                     # Ambiente virtual (no commitear a Git)
@@ -92,12 +93,29 @@ RestAPI/
 - Verifica que existe el archivo `.env`
 - Comprueba que todas las variables requeridas están configuradas correctamente
 
-### Error: "could not connect to server"
-- Asegúrate que PostgreSQL está corriendo (`brew services start postgresql` en macOS)
-- Verifica el host y puerto en `.env`
+### Error: "[Errno 10061] No se pudo establecer conexión" o "Connection refused"
+- Asegúrate que MySQL está corriendo:
+  - En macOS: abre MySQL Workbench o ejecuta `brew services start mysql-community-server`
+  - En Windows: verifica que el servicio MySQL está iniciado en Services
+- Verifica el host y puerto en `.env` (por defecto localhost:3306)
+
+### Error: "Access denied for user"
+- Verifica que el usuario y contraseña en `.env` son correctos
+- Asegúrate de que el usuario tiene permisos para crear bases de datos
 
 ### Error: "Seed skipped: data already exists"
-- Usa `python scripts/seed_db_postgres.py --reset` para recrear desde cero
+- Usa `python scripts/seed_db_mysql.py --reset` para recrear desde cero
+
+## Cambios de PostgreSQL a MySQL
+
+Si anteriormente usabas PostgreSQL, ten en cuenta estos cambios:
+
+| Aspectos | PostgreSQL | MySQL |
+|----------|------------|-------|
+| **Driver** | psycopg[binary] | mysql-connector-python |
+| **Script seed** | seed_db_postgres.py | seed_db_mysql.py |
+| **Puerto por defecto** | 5432 | 3306 |
+| **Usuario por defecto** | postgres | root |
 
 ## Datos de ejemplo
 
