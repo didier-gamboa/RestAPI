@@ -176,15 +176,27 @@ Accept: application/json
 
 ```
 RestAPI/
+├── app/
+│   ├── __init__.py            # Inicializador del paquete app
+│   ├── main.py                # Definición de la aplicación FastAPI y endpoints
+│   ├── db.py                  # Funciones de conexión a la base de datos
+│   ├── settings.py            # Configuración y variables de entorno
+│   └── __pycache__/           # Caché de Python (no commitear)
 ├── scripts/
 │   ├── seed_db_mysql.py       # Script para poblar la base de datos MySQL
-│   └── seed_db_postgres.py    # Script para poblar la base de datos PostgreSQL (legado)
+│   └── seed_db_postgres.py    # Script para poblar la base de datos PostgreSQL
 ├── .env.example               # Plantilla de variables de entorno
 ├── .env                       # Variables de entorno (no commitear a Git)
 ├── .venv/                     # Ambiente virtual (no commitear a Git)
 ├── requirements.txt           # Dependencias del proyecto
 └── README.md                  # Este archivo
 ```
+
+### Descripción de archivos en `app/`:
+
+- **main.py**: Contiene la instancia de la aplicación FastAPI y define todos los endpoints (rutas) de la API
+- **db.py**: Gestiona la conexión a la base de datos, incluye la función `get_conn()` que establece conexiones según el tipo de base de datos configurado
+- **settings.py**: Carga las variables de entorno del archivo `.env` y define constantes como `APP_NAME` e `IS_MYSQL`
 
 ## Solución de problemas
 
@@ -213,16 +225,6 @@ RestAPI/
 ### Error: "Seed skipped: data already exists"
 - Usa `python scripts/seed_db_mysql.py --reset` (para MySQL) o `python scripts/seed_db_postgres.py --reset` (para PostgreSQL) para recrear desde cero
 
-## Comparativa: MySQL vs PostgreSQL
-
-| Aspecto | MySQL | PostgreSQL |
-|--------|-------|------------|
-| **Driver** | mysql-connector-python | psycopg[binary] |
-| **Script seed** | seed_db_mysql.py | seed_db_postgres.py |
-| **Puerto por defecto** | 3306 | 5432 |
-| **Usuario por defecto** | root | postgres |
-| **Facilidad de uso** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Características avanzadas** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 
 ## Datos de ejemplo
 
