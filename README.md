@@ -110,6 +110,68 @@ Esto creará 3 tablas:
 - **products**: 6 productos de ejemplo
 - **sales**: 12 transacciones de ejemplo
 
+## 6. Levantar el servidor
+
+Una vez que has completado los pasos anteriores y la base de datos está poblada con datos, puedes iniciar el servidor FastAPI:
+
+```bash
+# Asegúrate de que tu ambiente virtual está activado
+source .venv/bin/activate  # en macOS/Linux
+
+# Ejecuta el servidor
+uvicorn app.main:app --reload
+```
+
+Deberías ver algo como:
+```
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started server process [XXXXX]
+```
+
+El servidor estará disponible en: **http://localhost:8000**
+
+## 7. Probar la API
+
+### Opción A: Con FastAPI Swagger UI (Recomendado)
+
+FastAPI incluye una interfaz interactiva automáticamente:
+
+```
+http://localhost:8000/docs
+```
+
+Ahí puedes ver todos los endpoints disponibles y probarlos directamente desde el navegador.
+
+### Opción B: Con cURL
+
+```bash
+# Obtener lista de clientes
+curl http://localhost:8000/clients
+
+# Ejemplo de salida:
+[
+  {"client_id": 1, "full_name": "Ana García", "email": "ana@example.com", "created_at": "2026-02-20T10:00:00"},
+  {"client_id": 2, "full_name": "Luis Pérez", "email": "luis@example.com", "created_at": "2026-02-20T10:01:00"},
+  ...
+]
+```
+
+### Opción C: Con Postman
+
+1. Abre Postman (descárgalo desde https://www.postman.com/downloads/)
+2. Crea una nueva request:
+   - **Método:** GET
+   - **URL:** http://localhost:8000/clients
+   - **Headers:** (vacío por defecto está bien)
+3. Haz clic en "Send"
+4. Verás la respuesta JSON con la lista de clientes
+
+**Ejemplo de request en Postman:**
+```
+GET http://localhost:8000/clients
+Accept: application/json
+```
+
 ## Estructura del proyecto
 
 ```
