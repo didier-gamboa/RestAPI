@@ -1,12 +1,18 @@
 # RestAPI - Proyecto Integrador
 
-Proyecto de REST API para gestionar clientes, productos y ventas usando Python, FastAPI y MySQL.
+Proyecto de REST API para gestionar clientes, productos y ventas usando Python y FastAPI.
+
+Soporta dos opciones de bases de datos:
+- **MySQL** (recomendado para comenzar)
+- **PostgreSQL** (alternativa avanzada)
 
 ## Requisitos previos
 
 - Python 3.8+
-- MySQL Server instalado y en funcionamiento (puedes usar MySQL Workbench como interfaz gráfica)
 - pip (gestor de paquetes de Python)
+- **Una de estas opciones:**
+  - **MySQL Server** instalado y en funcionamiento (puedes usar MySQL Workbench como interfaz gráfica)
+  - **PostgreSQL** instalado y en funcionamiento
 
 ## Pasos de instalación
 
@@ -43,7 +49,9 @@ Copia el archivo `.env.example` a `.env`:
 cp .env.example .env
 ```
 
-Luego edita el archivo `.env` con tus credenciales de MySQL:
+#### Opción A: MySQL (recomendado)
+
+Edita el archivo `.env` con tus credenciales de MySQL:
 
 ```dotenv
 DB_HOST=localhost          # Host de tu base de datos (generalmente localhost)
@@ -58,7 +66,26 @@ DB_PASSWORD=tu_contraseña # Tu contraseña de MySQL
 - La base de datos `store_db` existe o será creada automáticamente por el seed script
 - Las credenciales sean correctas (usuario y contraseña que configuraste en MySQL)
 
+#### Opción B: PostgreSQL
+
+Edita el archivo `.env` con tus credenciales de PostgreSQL:
+
+```dotenv
+DB_HOST=localhost          # Host de tu base de datos (generalmente localhost)
+DB_PORT=5432              # Puerto (por defecto 5432 para PostgreSQL)
+DB_NAME=store_db          # Nombre de la base de datos
+DB_USER=postgres          # Usuario de PostgreSQL (por defecto postgres)
+DB_PASSWORD=tu_contraseña # Tu contraseña de PostgreSQL
+```
+
+**Importante:** Asegúrate de que:
+- PostgreSQL está corriendo (`brew services start postgresql` en macOS)
+- La base de datos `store_db` existe o será creada automáticamente por el seed script
+- Las credenciales sean correctas
+
 ### 5. Ejecutar el seed (pobla la base de datos)
+
+#### Para MySQL:
 
 ```bash
 # Primera ejecución (crea tablas e inserta datos)
@@ -66,6 +93,16 @@ python scripts/seed_db_mysql.py
 
 # Para reiniciar y recrear las tablas:
 python scripts/seed_db_mysql.py --reset
+```
+
+#### Para PostgreSQL:
+
+```bash
+# Primera ejecución (crea tablas e inserta datos)
+python scripts/seed_db_postgres.py
+
+# Para reiniciar y recrear las tablas:
+python scripts/seed_db_postgres.py --reset
 ```
 
 Esto creará 3 tablas:
@@ -93,29 +130,37 @@ RestAPI/
 - Verifica que existe el archivo `.env`
 - Comprueba que todas las variables requeridas están configuradas correctamente
 
-### Error: "[Errno 10061] No se pudo establecer conexión" o "Connection refused"
+### Error: "No puedo conectar a la base de datos"
+
+**Para MySQL:**
 - Asegúrate que MySQL está corriendo:
   - En macOS: abre MySQL Workbench o ejecuta `brew services start mysql-community-server`
   - En Windows: verifica que el servicio MySQL está iniciado en Services
 - Verifica el host y puerto en `.env` (por defecto localhost:3306)
 
-### Error: "Access denied for user"
+**Para PostgreSQL:**
+- Asegúrate que PostgreSQL está corriendo:
+  - En macOS: ejecuta `brew services start postgresql`
+  - En Windows: verifica que el servicio PostgreSQL está iniciado en Services
+- Verifica el host y puerto en `.env` (por defecto localhost:5432)
+
+### Error: "Access denied for user" o "FATAL: password authentication failed"
 - Verifica que el usuario y contraseña en `.env` son correctos
 - Asegúrate de que el usuario tiene permisos para crear bases de datos
 
 ### Error: "Seed skipped: data already exists"
-- Usa `python scripts/seed_db_mysql.py --reset` para recrear desde cero
+- Usa `python scripts/seed_db_mysql.py --reset` (para MySQL) o `python scripts/seed_db_postgres.py --reset` (para PostgreSQL) para recrear desde cero
 
-## Cambios de PostgreSQL a MySQL
+## Comparativa: MySQL vs PostgreSQL
 
-Si anteriormente usabas PostgreSQL, ten en cuenta estos cambios:
-
-| Aspectos | PostgreSQL | MySQL |
-|----------|------------|-------|
-| **Driver** | psycopg[binary] | mysql-connector-python |
-| **Script seed** | seed_db_postgres.py | seed_db_mysql.py |
-| **Puerto por defecto** | 5432 | 3306 |
-| **Usuario por defecto** | postgres | root |
+| Aspecto | MySQL | PostgreSQL |
+|--------|-------|------------|
+| **Driver** | mysql-connector-python | psycopg[binary] |
+| **Script seed** | seed_db_mysql.py | seed_db_postgres.py |
+| **Puerto por defecto** | 3306 | 5432 |
+| **Usuario por defecto** | root | postgres |
+| **Facilidad de uso** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Características avanzadas** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 
 ## Datos de ejemplo
 
