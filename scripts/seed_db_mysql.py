@@ -56,8 +56,8 @@ DDL_SQL = [
       FOREIGN KEY (product_id) REFERENCES products(product_id)
     );
     """,
-    "CREATE INDEX IF NOT EXISTS idx_sales_date ON sales(sale_date);",
-    "CREATE INDEX IF NOT EXISTS idx_sales_status ON sales(status);",
+    "CREATE INDEX idx_sales_date ON sales(sale_date);",
+    "CREATE INDEX idx_sales_status ON sales(status);",
 ]
 
 RESET_SQL = [
